@@ -11,40 +11,40 @@ public class Course {
     private static final Pattern TIME_PATTERN =
             Pattern.compile("^[MTWRFSU]+\\s+\\d{1,2}:\\d{2}(AM|PM)$");
 
-    private final String courseName;
-    private final int courseNumber;
-    private final String time;
+    private String course_name;
+    private String time;
+    private String days;
 
-    public Course(String courseName, int courseNumber, String time) {
-        if (courseName == null || courseName.isBlank()) {
+    public Course(String course_name, String time, String days) {
+        if (course_name == null || course_name.isBlank()) {
             throw new IllegalArgumentException("Invalid. Type help for correct formatting");
         }
-        if (courseNumber <= 0) {
+        if (days == null || days.isBlank()) {
             throw new IllegalArgumentException("Invalid. Type help for correct formatting");
         }
         if (time == null || !TIME_PATTERN.matcher(time).matches()) {
             throw new IllegalArgumentException("Invalid. Type help for correct formatting");
         }
 
-        this.courseName = courseName;
-        this.courseNumber = courseNumber;
+        this.course_name = course_name;
         this.time = time;
+        this.days = days;
     }
 
     public String getCourseName() {
-        return courseName;
-    }
-
-    public int getCourseNumber() {
-        return courseNumber;
+        return course_name;
     }
 
     public String getTime() {
         return time;
     }
 
+    public String getDays() {
+        return days;
+    }
+
     @Override
     public String toString() {
-        return courseName + " (CRN " + courseNumber + ") - " + time;
+        return course_name + " " + days + " " + time;
     }
 }
