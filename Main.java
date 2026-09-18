@@ -128,8 +128,23 @@ public class Main
         }
         
         Student student = new Student(name); 
-        students.add(student); 
-        System.out.println("saved " + student.getName() + "."); 
+        
+        System.out.println(classInputMessage()); 
+        
+        String line = input.nextLine().trim(); 
+        while (!line.isEmpty())
+        {
+            Course course = parseCourse(line); 
+            if (course != null)
+            {
+                student.addCourse(course);
+            }
+            line = input.nextLine().trim();
+        }
+        
+        students.add(student);
+        System.out.println("saved " + student.getName() + " with "
+            + student.getCourses().size + " course(s).");
     }
     
     public static String listStudents()
@@ -146,6 +161,8 @@ public class Main
         }
         return result;
     }
+    
+    
 
     /**
      * Organizes students into study groups based on the classes
