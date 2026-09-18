@@ -6,7 +6,7 @@ public class VTCatalogBuilder {
         CourseCatalog catalog = new CourseCatalog();
 
         catalog.addCourse(new Course("CS 1114", 10101, "MWF 9:00AM"));   // Intro to Software Design
-        catalog.addCourse(new Course("CS 2114", 10202, "TR 3:30PM"));    // Software Design & Data Structures
+        catalog.addCourse(new Course("CS 2114", 10202, "TR 10:00AM"));  // Software Design & Data Structures
         catalog.addCourse(new Course("CS 2505", 10303, "TR 9:30AM"));    // Intro to Computer Organization
         catalog.addCourse(new Course("CS 2506", 10404, "TR 11:00AM"));   // Computer Organization II
         catalog.addCourse(new Course("CS 3114", 10505, "MWF 1:00PM"));   // Data Structures & Algorithms
@@ -15,6 +15,30 @@ public class VTCatalogBuilder {
         catalog.addCourse(new Course("CS 4114", 10808, "TR 12:30PM"));   // Formal Languages & Automata
         catalog.addCourse(new Course("CS 4204", 10909, "MWF 11:00AM"));  // Computer Graphics
         catalog.addCourse(new Course("CS 4884", 11010, "R 5:00PM"));     // Special Topics
+
+        // --- Math (MATH) ---
+        catalog.addCourse(new Course("MATH 1225", 20101, "MWF 8:00AM"));   // Calculus of a Single Variable
+        catalog.addCourse(new Course("MATH 1226", 20202, "MWF 9:00AM"));   // Calculus of a Single Variable (cont.)
+        catalog.addCourse(new Course("MATH 2114", 20303, "TR 9:30AM"));    // Introduction to Linear Algebra
+        catalog.addCourse(new Course("MATH 2204", 20404, "MWF 10:00AM"));  // Introduction to Multivariable Calculus
+        catalog.addCourse(new Course("MATH 2214", 20505, "TR 11:00AM"));   // Introduction to Differential Equations
+        catalog.addCourse(new Course("MATH 3034", 20606, "MWF 11:00AM"));  // Introduction to Proofs
+        catalog.addCourse(new Course("MATH 3124", 20707, "TR 12:30PM"));   // Modern Algebra
+        catalog.addCourse(new Course("MATH 3144", 20808, "MWF 1:00PM"));   // Linear Algebra I
+        catalog.addCourse(new Course("MATH 3214", 20909, "TR 2:00PM"));    // Vector Calculus
+        catalog.addCourse(new Course("MATH 3224", 21010, "MW 3:00PM"));    // Advanced Calculus
+
+        // --- English (ENGL) ---
+        catalog.addCourse(new Course("ENGL 1105", 30101, "MWF 8:00AM"));   // First-Year Writing I
+        catalog.addCourse(new Course("ENGL 1106", 30202, "MWF 9:00AM"));   // First-Year Writing II
+        catalog.addCourse(new Course("ENGL 2534", 30303, "TR 9:30AM"));    // American Literary History
+        catalog.addCourse(new Course("ENGL 2544", 30404, "TR 11:00AM"));   // British Literary History
+        catalog.addCourse(new Course("ENGL 2604", 30505, "MWF 10:00AM"));  // Introduction to Fiction
+        catalog.addCourse(new Course("ENGL 2984", 30606, "MWF 11:00AM"));  // Special Study Topics
+        catalog.addCourse(new Course("ENGL 3204", 30707, "TR 12:30PM"));   // Introduction to Poetry
+        catalog.addCourse(new Course("ENGL 3764", 30808, "MWF 1:00PM"));   // Technical Writing
+        catalog.addCourse(new Course("ENGL 3774", 30909, "TR 2:00PM"));    // Business Writing
+        catalog.addCourse(new Course("ENGL 4744", 31010, "MW 3:00PM"));    // Studies in a Literary Genre
 
         return catalog;
     }
