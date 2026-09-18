@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import Aneesh_Implementation.Course;
+
 /**
  * A student and the courses they are enrolled in.
  */

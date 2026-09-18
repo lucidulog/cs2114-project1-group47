@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import Aneesh_Implementation.Course;
+
 /**
  * Tests for Student: one normal case and one bad-input case per method.
  */
