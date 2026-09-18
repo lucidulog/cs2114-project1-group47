@@ -7,12 +7,17 @@ extends TestCase
 //~Fields...................................................................
 private Main mainObject;
 
-
+/**
+ * required empty constructor
+ */
 public MainTest()
 {
     // Required empty constructor 
 }
 
+/**
+ * Sets up the test environment
+ */
 public void setUp()
 {
     mainObject = new Main();
