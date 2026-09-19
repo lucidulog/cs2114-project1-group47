@@ -144,7 +144,7 @@ public class Main
         }
         else if (command.equalsIgnoreCase("make group"))
         {
-            System.out.println("Group creation feature coming soon!"); // should call doMakeGroups()
+            doMakeGroups();
         }
         else if (command.equalsIgnoreCase("students"))
         {
@@ -195,7 +195,7 @@ public class Main
      * 
      * @param scanner The active Scanner object to read user input.
      */
-    public void addCoursesForCurrentStudent(Scanner scanner)
+    public void addCoursesForCurrentStudent(Scanner scanner) {
         Student currentStudent = students.get(students.size() - 1);
         System.out.println("--- Adding courses for " + currentStudent.getName() + " ---");
  
