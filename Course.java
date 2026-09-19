@@ -1,4 +1,3 @@
-import java.util.regex.Pattern;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,12 +11,6 @@ import java.util.HashMap;
  * constructor so a Course can never exist in a bad state.
  */
 public class Course {
-
-    // Days (any combo of M,T,W,R,F,S,U) + space + h:mm + AM/PM, e.g. "MWF 9:00AM" or "TR 11:15AM"
-    private static final Pattern TIME_PATTERN =
-            Pattern.compile("^[MTWRFSU]+\\s+\\d{1,2}:\\d{2}(AM|PM)$");
-    
-
     private String course_name; //In the format of "CS_2114"
     private String time; //In the format of 9:00AM or 9:00PM
     private String days; //In the format of "TR" or "MWF"
@@ -53,7 +46,7 @@ public class Course {
         }
         HashMap<String, Object> specificCourse = course_dict.get(crn);
         this.course_name = ((String) specificCourse.get("subject")) + "_" + ((String) specificCourse.get("course_number"));
-        
+
     }
 
     public String getCourseName() {
