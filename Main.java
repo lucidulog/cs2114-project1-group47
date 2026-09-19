@@ -16,6 +16,8 @@ public class Main
     //~ Fields ................................................................
 
     private ArrayList<Student> students;
+    private ArrayList<Group> groups;
+    // private CourseCatalog catalog;, built via VTCatalogBuilder.build()
 
     //~ Constructor ...........................................................
 
@@ -26,6 +28,7 @@ public class Main
     public Main()
     {
         students = new ArrayList<>();
+        groups = new ArrayList<>();
     }
     
     //~ Methods ...............................................................
@@ -193,41 +196,51 @@ public class Main
      * @param scanner The active Scanner object to read user input.
      */
     public void addCoursesForCurrentStudent(Scanner scanner)
-    {
         Student currentStudent = students.get(students.size() - 1);
         System.out.println("--- Adding courses for " + currentStudent.getName() + " ---");
-
+ 
         while (true)
         {
             System.out.print("Enter Course (Format: CS_2114 TR 3:30PM-4:20PM) or 'done': ");
             String input = scanner.nextLine().trim();
-
+ 
             if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("exit"))
             {
                 break;
             }
-
+ 
             String[] parts = input.split("\\s+");
-
+ 
             if (parts.length != 3)
             {
                 System.out.println("Invalid format! Must enter all 3 parts separated by spaces.");
                 System.out.println("Example: CS_2114 TR 3:30PM-4:20PM\n");
                 continue;
             }
-
-            try
+ 
+            String name = parts[0].replace('_', ' ');
+            String time = normalizeTime(parts[1] + " " + parts[2]);
+ 
+            Course newCourse = findCourse(name, time);
+            if (newCourse != null)
             {
-                // parts[0] = Name, parts[1] = Days, parts[2] = Time
-                Course newCourse = new Course(parts[0], parts[2], parts[1]);
                 currentStudent.addCourse(newCourse);
                 System.out.println("Added: " + newCourse + "\n");
             }
-            catch (IllegalArgumentException e)
+        }
+    }
+
+        private Course findCourse(String name, String time)
+    {
+        for (Course c : catalog.getAllCourses())
+        {
+            if (c.getCourseName().equalsIgnoreCase(name) && c.getTime().equalsIgnoreCase(time))
             {
-                System.out.println("Error: " + e.getMessage() + "\n");
+                return c;
             }
         }
+            System.out.println("Error: Invalid course name or time.");
+            return null;
     }
 
     /**
@@ -273,6 +286,183 @@ public class Main
         System.out.println();
     }
 
+        /**
+     * Cleans up manually-typed times (e.g. "MWF3:30-4:20") into the format
+     * Course expects ("MWF 3:30PM-4:20PM"), inferring AM/PM when missing.
+     * 
+     * @param raw The raw time string typed by the user.
+     * @return The normalized time string.
+     */
+    private String normalizeTime(String raw)
+    {
+        String s = raw.trim().replaceFirst("^([MTWRFSUmtwrfsu]+)(\\d)", "$1 $2");
+ 
+        int spaceIdx = s.indexOf(' ');
+        if (spaceIdx < 0)
+        {
+            return s; // malformed; Course's own validation will reject it with the standard message
+        }
+        String days = s.substring(0, spaceIdx).toUpperCase();
+        String rest = s.substring(spaceIdx + 1).trim();
+ 
+        String[] segments = rest.split("-", 2);
+        StringBuilder result = new StringBuilder(days).append(' ');
+        for (int i = 0; i < segments.length; i++)
+        {
+            result.append(withMeridiem(segments[i].trim()));
+            if (i == 0 && segments.length > 1)
+            {
+                result.append('-');
+            }
+        }
+        return result.toString();
+    }
+ 
+    /**
+     * Adds AM/PM to a bare clock time like "3:30", guessing based on a
+     * typical class-day schedule.
+     * 
+     * @param clock The bare clock time (with or without AM/PM already).
+     * @return The clock time with AM/PM appended.
+     */
+    private String withMeridiem(String clock)
+    {
+        String upper = clock.toUpperCase();
+        if (upper.endsWith("AM") || upper.endsWith("PM"))
+        {
+            return upper;
+        }
+        String[] parts = clock.split(":");
+        if (parts.length != 2)
+        {
+            return clock; // leave as-is; validation will reject with the standard message
+        }
+        try
+        {
+            int hour = Integer.parseInt(parts[0].trim());
+            String meridiem = (hour == 12 || (hour >= 1 && hour <= 6)) ? "PM" : "AM";
+            return clock + meridiem;
+        }
+        catch (NumberFormatException e)
+        {
+            return clock;
+        }
+    }
+ 
+    /**
+     * Builds study groups from the current student roster and reports the
+     * result to the console.
+     */
+    public void doMakeGroups()
+    {
+        if (students.isEmpty())
+        {
+            System.out.println("No students have been added yet.");
+            return;
+        }
+ 
+        groups = makeGroups(students);
+ 
+        if (groups.isEmpty())
+        {
+            System.out.println("No groups could be formed "
+                + "(need at least 2 students sharing a course and time slot).");
+            return;
+        }
+ 
+        System.out.println("Formed " + groups.size() + " group(s):");
+        listGroups();
+    }
+ 
+    /**
+     * Organizes students into groups based on shared course (CRN) + time
+     * slot. A group needs at least 2 students; singles are left ungrouped.
+     * 
+     * @param studentList The students to organize into groups.
+     * @return The list of Group objects that were formed.
+     */
+    public ArrayList<Group> makeGroups(ArrayList<Student> studentList)
+    {
+        ArrayList<Group> result = new ArrayList<>();
+        LinkedHashMap<String, ArrayList<Student>> buckets = new LinkedHashMap<>();
+        LinkedHashMap<String, Course> bucketCourse = new LinkedHashMap<>();
+ 
+        for (Student s : studentList)
+        {
+            for (Course c : s.getCourses())
+            {
+                String key = c.getCourseName() + "|" + c.getTime();
+                buckets.computeIfAbsent(key, k -> new ArrayList<>()).add(s);
+                bucketCourse.putIfAbsent(key, c);
+            }
+        }
+ 
+        for (String key : buckets.keySet())
+        {
+            ArrayList<Student> members = buckets.get(key);
+            if (members.size() >= 2)
+            {
+                Course c = bucketCourse.get(key);
+                try
+                {
+                    result.add(new Group(c, members));
+                }
+                catch (IllegalArgumentException e)
+                {
+                    System.out.println("Could not form group for " + c.getCourseName() + ": " + e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+ 
+    /**
+     * Prints every registered student and the courses they're enrolled in.
+     */
+    private void listStudents()
+    {
+        if (students.isEmpty())
+        {
+            System.out.println("No students added yet.");
+            return;
+        }
+        System.out.println("Students:");
+        for (Student s : students)
+        {
+            ArrayList<Course> courses = s.getCourses();
+            StringBuilder sb = new StringBuilder("  " + s.getName() + " - ");
+            if (courses.isEmpty())
+            {
+                sb.append("(no courses added yet)");
+            }
+            else
+            {
+                for (int i = 0; i < courses.size(); i++)
+                {
+                    if (i > 0) sb.append(", ");
+                    sb.append(courses.get(i).getCourseName());
+                }
+            }
+            System.out.println(sb);
+        }
+    }
+ 
+    /**
+     * Prints every currently formed study group and its meeting location.
+     */
+    private void listGroups()
+    {
+        if (groups.isEmpty())
+        {
+            System.out.println("No groups formed yet. Try 'make group'.");
+            return;
+        }
+        for (Group g : groups)
+        {
+            System.out.print(g);
+        }
+    }
+ 
     /**
      * Gets the list of registered students.
      * 
@@ -281,6 +471,16 @@ public class Main
     public ArrayList<Student> getStudents()
     {
         return students;
+    }
+ 
+    /**
+     * Gets the list of currently formed groups.
+     * 
+     * @return ArrayList of groups.
+     */
+    public ArrayList<Group> getGroups()
+    {
+        return groups;
     }
 
     /**
