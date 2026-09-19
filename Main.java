@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 //-------------------------------------------------------------------------
@@ -56,6 +59,16 @@ public class Main
         System.out.println("  Step 1 Name     : CS_2114         (Department_Number with underscore)");
         System.out.println("  Step 2 Days     : TR or MWF or F  (Meeting days)");
         System.out.println("  Step 3 Time     : 3:30PM-4:20PM   (Start-End time range)");
+    }
+
+    /**
+     * Prints the accepted formats for adding a course.
+     */
+    public void printClassInputInstructions()
+    {
+        System.out.println("Please add the class using one of the following formats:");
+        System.out.println(" 1) CRN Number: Enter the 5-digit CRN (e.g., 12345)");
+        System.out.println(" 2) Class & Time: Enter class name and time slot (e.g., CS 2114 | MWF3:30-4:20)");
     }
     
     /**
@@ -128,7 +141,19 @@ public class Main
         }
         else if (command.equals("make group"))
         {
-            System.out.println("Group creation feature coming soon!");
+            System.out.println("Group creation feature coming soon!"); // should call doMakeGroups()
+        }
+        else if (command.equalsIgnoreCase("students"))
+        {
+            //listStudents();
+        }
+        else if (command.equalsIgnoreCase("courses"))
+        {
+            //listCourses();
+        }
+        else if (command.equalsIgnoreCase("groups"))
+        {
+            //listGroups();
         }
         else 
         {
