@@ -218,29 +218,36 @@ public class Main
                 continue;
             }
  
-            String name = parts[0].replace('_', ' ');
-            String time = normalizeTime(parts[1] + " " + parts[2]);
- 
-            Course newCourse = findCourse(name, time);
-            if (newCourse != null)
-            {
-                currentStudent.addCourse(newCourse);
-                System.out.println("Added: " + newCourse + "\n");
+            if (input.contains("CRN")) {
+                // Handle CRN input
+                String CRN = input;
+                Course newCourse = new Course(CRN);
+                if (newCourse != null) {
+                    currentStudent.addCourse(newCourse);
+                    System.out.println("Added: " + newCourse + "\n");
+                }
+                continue;
             }
-        }
-    }
+            else {
+                // Handle Class & Time input
+                String[] classParts = input.substring(1).trim().split(" ");
+                if (classParts.length != 3) {
+                    System.out.println("Invalid format! Must enter class name, days, and time separated by spaces.");
+                    System.out.println("Example: CS_2114 MW 3:30PM-4:20PM\n");
+                    continue;
+                }
+                String name = classParts[0].trim();
+                String days = classParts[1].trim();
+                String time = normalizeTime(classParts[2].trim());
 
-        private Course findCourse(String name, String time)
-    {
-        for (Course c : catalog.getAllCourses())
-        {
-            if (c.getCourseName().equalsIgnoreCase(name) && c.getTime().equalsIgnoreCase(time))
-            {
-                return c;
+                Course newCourse = new Course(name, time, days);
+                if (newCourse != null) {
+                    currentStudent.addCourse(newCourse);
+                    System.out.println("Added: " + newCourse + "\n");
+                }
+                continue;
             }
         }
-            System.out.println("Error: Invalid course name or time.");
-            return null;
     }
 
     /**
