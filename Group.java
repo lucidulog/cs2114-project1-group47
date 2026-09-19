@@ -7,7 +7,7 @@ import java.util.ArrayList;
 *  roster of students, and provides methods like addMember(), contains(),
 *  and size() to manage that roster.
 *
-*  @author Your name (________)
+*  @author Zongqi Nie
 *  @version (2026.09.19)
 */
 
@@ -21,24 +21,6 @@ public class Group
 
     // -------------------------------------------------------------------
     /**
-     * Creates a new Group for the given course with an empty roster.
-     *
-     * @param course    The course this group meets for.
-     */
-    public Group(Course course)
-    {
-        if (course == null)
-        {
-            throw new IllegalArgumentException(
-                "A group must have a course. Type help for correct "
-                + "formatting");
-        }
-        this.course = course;
-        this.members = new ArrayList<>();
-    }
-
-    // -------------------------------------------------------------------
-    /**
      * Creates a new Group for the given course and fills it with a
      * starting roster. A student listed twice is only stored once.
      *
@@ -47,12 +29,16 @@ public class Group
      */
     public Group(Course course, ArrayList<Student> members)
     {
-        this(course);
-
+        if (course == null)
+        {
+            throw new IllegalArgumentException("Course cannot be null");
+        }
         if (members == null)
         {
             throw new IllegalArgumentException("Member list cannot be null");
         }
+        this.course = course;
+        this.members = new ArrayList<>();
         for (Student student : members)
         {
             addIfAbsent(student);

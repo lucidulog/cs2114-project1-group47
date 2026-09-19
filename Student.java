@@ -6,7 +6,7 @@ import java.util.ArrayList;
 *  getName(), getCourse(), and addCourse(). It serves to assign students to
 *  their imputed classes. 
 *
-*  @author Your name (________)
+*  @author Hannah Dai
 *  @version (2026.09.19)
 */
 
