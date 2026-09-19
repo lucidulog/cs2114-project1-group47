@@ -1,5 +1,7 @@
 // Generated from the official Virginia Tech Fall 2026 timetable dataset.
 // This file uses only the Java standard library. No JSON library is required.
+package Course_Catalog_Folder;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
