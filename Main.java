@@ -113,11 +113,11 @@ public class Main
      */
     public void processCommand(String command, Scanner scanner)
     {
-        if (command.equals("add student"))
+        if (command.equalsIgnoreCase("add student"))
         {
             addStudent(scanner);
         }
-        else if (command.equals("add course"))
+        else if (command.equalsIgnoreCase("add course"))
         {
             if (students.isEmpty())
             {
@@ -128,7 +128,7 @@ public class Main
                 addCoursesForCurrentStudent(scanner);
             }
         }
-        else if (command.equals("view schedule") || command.equals("show schedule"))
+        else if (command.equalsIgnoreCase("view schedule") || command.equalsIgnoreCase("show schedule"))
         {
             if (students.isEmpty())
             {
@@ -139,21 +139,21 @@ public class Main
                 viewStudentSchedule(scanner);
             }
         }
-        else if (command.equals("make group"))
+        else if (command.equalsIgnoreCase("make group"))
         {
             System.out.println("Group creation feature coming soon!"); // should call doMakeGroups()
         }
         else if (command.equalsIgnoreCase("students"))
         {
-            //listStudents();
-        }
-        else if (command.equalsIgnoreCase("courses"))
-        {
-            //listCourses();
+            System.out.println(students.size() + " student(s) registered:");
+            for (Student s : students)
+            {
+                System.out.println(" - " + s.getName());
+            }
         }
         else if (command.equalsIgnoreCase("groups"))
         {
-            //listGroups();
+            System.out.println("View all groups feature coming soon!"); //listGroups();
         }
         else 
         {
