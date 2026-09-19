@@ -1,23 +1,63 @@
 import java.util.ArrayList;
+//-------------------------------------------------------------------------
+/**
+*  This is the student class. It manages individual student records and 
+*  their assigned academic schedules by providing core methods like 
+*  getName(), getCourse(), and addCourse(). It serves to assign students to
+*  their imputed classes. 
+*
+*  @author Your name (________)
+*  @version (2026.09.19)
+*/
 
-public class Student {
+public class Student 
+{
+    //~Fields.............................................................
     private String name;
     private ArrayList<Course> courses;
 
-    public Student(String name) {
+    //~ Constructor.......................................................
+    
+    // -------------------------------------------------------------------
+    /**
+     * Creates a new Student object with the specified name and an empty
+     * list of courses.
+     * 
+     * @param name      The full name of the student.
+     */
+    public Student(String name) 
+    {
         this.name = name;
         this.courses = new ArrayList<>();
     }
-
-    public String getName() {
+    
+    /**
+     * Getter method to return the name of the student 
+     * 
+     * @return          The student's name. 
+     */
+    public String getName() 
+    {
         return name;
     }
 
-    public ArrayList<Course> getCourses() {
+    /**
+     * Gets the list of courses this student is currently taking. 
+     * 
+     * @return          An ArrayList containing the student's courses
+     */
+    public ArrayList<Course> getCourses() 
+    {
         return courses;
     }
-
-    public void addCourse(Course course) {
+    
+    /**
+     * Adds a new course to this student's schedule. 
+     * 
+     * @param course    The course object to be added
+     */
+    public void addCourse(Course course) 
+    {
         courses.add(course);
     }
 }
