@@ -38,7 +38,7 @@ public class Main
      */
     public void printWelcome()
     {
-        System.out.println("Welcome to HokieConnect! Please enter your time to get started, "
+        System.out.println("Welcome to HokieConnect! Please "
             + "or type 'help' to see all available commands."); 
     }
     
