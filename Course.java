@@ -31,10 +31,6 @@ public class Course {
         this.days = days;
     }
 
-    public Course(int CRN) {
-        
-    }
-
     public String getCourseName() {
         return course_name;
     }
