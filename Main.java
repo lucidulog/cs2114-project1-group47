@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 //-------------------------------------------------------------------------
 /**
  * Main command-line application interface for HokieConnect.
- * Manages user interactive console commands to add students and courses.
  *
  * @author Luci Dulog (906619962)
  * @version (2026.09.19)
@@ -33,22 +35,40 @@ public class Main
      */
     public void printWelcome()
     {
-        System.out.println("Welcome to HokieConnect!" 
-            +" Please type 'help' to see all available commands."); 
+        System.out.println("Welcome to HokieConnect! Please enter your time to get started, "
+            + "or type 'help' to see all available commands."); 
     }
     
     /**
-     * Prints the basic command options for the user.
+     * Prints the basic command options and course formatting instructions.
      */
     public void printHelp()
     {
-        System.out.println("Commands:");
+        System.out.println("=== Commands ===");
         System.out.println(" - help: displays instructions"); 
         System.out.println(" - add student: adds a student record"); 
-        System.out.println(" - add course: adds a course to the current student");
+        System.out.println(" - add course: adds course(s) to the most recently added student");
+        System.out.println(" - view schedule: displays all courses registered for a student");
         System.out.println(" - make group: forms study groups once the last person " 
             + "is done adding their classes"); 
         System.out.println(" - exit: exits the application"); 
+        
+        System.out.println("\n=== Course Entry Format ===");
+        System.out.println("You can enter course info either in ONE LINE or STEP-BY-STEP:");
+        System.out.println("  One-line format : CS_2114 TR 3:30PM-4:20PM");
+        System.out.println("  Step 1 Name     : CS_2114         (Department_Number with underscore)");
+        System.out.println("  Step 2 Days     : TR or MWF or F  (Meeting days)");
+        System.out.println("  Step 3 Time     : 3:30PM-4:20PM   (Start-End time range)");
+    }
+
+    /**
+     * Prints the accepted formats for adding a course.
+     */
+    public void printClassInputInstructions()
+    {
+        System.out.println("Please add the class using one of the following formats:");
+        System.out.println(" 1) CRN Number: Enter the 5-digit CRN (e.g., 12345)");
+        System.out.println(" 2) Class & Time: Enter class name and time slot (e.g., CS 2114 | MWF3:30-4:20)");
     }
     
     /**
@@ -93,11 +113,11 @@ public class Main
      */
     public void processCommand(String command, Scanner scanner)
     {
-        if (command.equalsIgnoreCase("add student"))
+        if (command.equals("add student"))
         {
             addStudent(scanner);
         }
-        else if (command.equalsIgnoreCase("add course"))
+        else if (command.equals("add course"))
         {
             if (students.isEmpty())
             {
@@ -105,13 +125,35 @@ public class Main
             }
             else
             {
-                System.out.println("Ready to add course for: " 
-                    + students.get(students.size() - 1).getName());
+                addCoursesForCurrentStudent(scanner);
             }
         }
-        else if (command.equalsIgnoreCase("make group"))
+        else if (command.equals("view schedule") || command.equals("show schedule"))
         {
-            System.out.println("Group creation feature coming soon!");
+            if (students.isEmpty())
+            {
+                System.out.println("No students have been added yet.");
+            }
+            else
+            {
+                viewStudentSchedule(scanner);
+            }
+        }
+        else if (command.equals("make group"))
+        {
+            System.out.println("Group creation feature coming soon!"); // should call doMakeGroups()
+        }
+        else if (command.equalsIgnoreCase("students"))
+        {
+            //listStudents();
+        }
+        else if (command.equalsIgnoreCase("courses"))
+        {
+            //listCourses();
+        }
+        else if (command.equalsIgnoreCase("groups"))
+        {
+            //listGroups();
         }
         else 
         {
@@ -138,6 +180,97 @@ public class Main
         Student newStudent = new Student(name);
         students.add(newStudent);
         System.out.println("Added student: " + newStudent.getName());
+    }
+
+    /**
+     * Adds course(s) to the active student, supporting single-line input or multi-prompt input.
+     * 
+     * @param scanner The active Scanner object to read user input.
+     */
+    /**
+     * Adds course(s) to the most recently added student using single-line input.
+     * 
+     * @param scanner The active Scanner object to read user input.
+     */
+    public void addCoursesForCurrentStudent(Scanner scanner)
+    {
+        Student currentStudent = students.get(students.size() - 1);
+        System.out.println("--- Adding courses for " + currentStudent.getName() + " ---");
+
+        while (true)
+        {
+            System.out.print("Enter Course (Format: CS_2114 TR 3:30PM-4:20PM) or 'done': ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("exit"))
+            {
+                break;
+            }
+
+            String[] parts = input.split("\\s+");
+
+            if (parts.length != 3)
+            {
+                System.out.println("Invalid format! Must enter all 3 parts separated by spaces.");
+                System.out.println("Example: CS_2114 TR 3:30PM-4:20PM\n");
+                continue;
+            }
+
+            try
+            {
+                // parts[0] = Name, parts[1] = Days, parts[2] = Time
+                Course newCourse = new Course(parts[0], parts[2], parts[1]);
+                currentStudent.addCourse(newCourse);
+                System.out.println("Added: " + newCourse + "\n");
+            }
+            catch (IllegalArgumentException e)
+            {
+                System.out.println("Error: " + e.getMessage() + "\n");
+            }
+        }
+    }
+
+    /**
+     * Displays all registered courses for a selected student.
+     * 
+     * @param scanner The active Scanner object to read user input.
+     */
+    public void viewStudentSchedule(Scanner scanner)
+    {
+        System.out.print("Enter student name to view schedule: ");
+        String searchName = scanner.nextLine().trim();
+
+        Student target = null;
+        for (Student s : students)
+        {
+            if (s.getName().equalsIgnoreCase(searchName))
+            {
+                target = s;
+                break;
+            }
+        }
+
+        if (target == null)
+        {
+            System.out.println("Student '" + searchName + "' was not found.");
+            return;
+        }
+
+        ArrayList<Course> courseList = target.getCourses();
+        System.out.println("\n=== Schedule for " + target.getName() + " ===");
+
+        if (courseList.isEmpty())
+        {
+            System.out.println("No courses registered yet.");
+        }
+        else
+        {
+            for (Course c : courseList)
+            {
+                System.out.println(" - " + c.toString());
+            }
+        }
+        System.out.println();
     }
 
     /**
