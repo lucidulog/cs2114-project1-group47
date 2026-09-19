@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class Course {
     private String course_name; //In the format of "CS_2114"
-    private String time; //In the format of 9:00AM or 9:00PM
+    private String time; //In the format of "9:00AM-11:00AM"
     private String days; //In the format of "TR" or "MWF"
     private HashMap<String, HashMap<String, Object>> course_dict;
 
@@ -46,6 +46,7 @@ public class Course {
         }
         HashMap<String, Object> specificCourse = course_dict.get(crn);
         this.course_name = ((String) specificCourse.get("subject")) + "_" + ((String) specificCourse.get("course_number"));
+
 
     }
 
