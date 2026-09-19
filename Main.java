@@ -59,7 +59,7 @@ public class Main
         System.out.println("\n=== Course Entry Format ===");
         System.out.println("You can enter course info either in ONE LINE or STEP-BY-STEP:");
         System.out.println("  One-line format : CS_2114 TR 3:30PM-4:20PM");
-        System.out.println("  Step 1 Name     : CS_2114         (Department_Number with underscore)");
+        System.out.println("  Step 1 Name     : CS_2114         (Department Number with underscore)");
         System.out.println("  Step 2 Days     : TR or MWF or F  (Meeting days)");
         System.out.println("  Step 3 Time     : 3:30PM-4:20PM   (Start-End time range)");
     }
@@ -71,7 +71,7 @@ public class Main
     {
         System.out.println("Please add the class using one of the following formats:");
         System.out.println(" 1) CRN Number: Enter the 5-digit CRN (e.g., CRN12345)");
-        System.out.println(" 2) Class & Time: Enter class name and time slot (e.g., CS 2114 | MWF3:30-4:20)");
+        System.out.println(" 2) Class & Time: Enter class name and time slot (e.g., CS_2114 TR 3:30-4:20)");
     }
     
     /**
@@ -203,7 +203,6 @@ public class Main
         {
             System.out.print("Enter Course (Format: CS_2114 TR 3:30PM-4:20PM) or 'done': ");
             String input = scanner.nextLine().trim();
-            System.out.println("Input received: " + input); // Debugging line
  
             if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("exit"))
             {
@@ -225,10 +224,10 @@ public class Main
             }
             else if (parts.length == 3) {
                 // Handle Class & Time input
-                String[] classParts = input.substring(1).trim().split(" ");
+                String[] classParts = input.split(" ");
                 if (classParts.length != 3) {
                     System.out.println("Invalid format! Must enter class name, days, and time separated by spaces.");
-                    System.out.println("Example: CS_2114 MW 3:30PM-4:20PM\n");
+                    System.out.println("Example: CS_2114 TR 3:30PM-4:20PM\n");
                     continue;
                 }
                 String name = classParts[0].trim();
@@ -245,7 +244,7 @@ public class Main
             else {
                 System.out.println("Invalid input format! Please enter either a CRN or a class with days and time.");
                 System.out.println("Example CRN: CRN12345");
-                System.out.println("Example Class & Time: CS_2114 MW 3:30PM-4:20PM\n");
+                System.out.println("Example Class & Time: CS_2114 TR 3:30PM-4:20PM\n");
             }
         }
     }
@@ -294,8 +293,8 @@ public class Main
     }
 
         /**
-     * Cleans up manually-typed times (e.g. "MWF3:30-4:20") into the format
-     * Course expects ("MWF 3:30PM-4:20PM"), inferring AM/PM when missing.
+     * Cleans up manually-typed times (e.g. "TR3:30-4:20") into the format
+     * Course expects ("TR 3:30PM-4:20PM"), inferring AM/PM when missing.
      * 
      * @param raw The raw time string typed by the user.
      * @return The normalized time string.
@@ -380,30 +379,23 @@ public class Main
         System.out.println("Formed " + groups.size() + " group(s):");
         listGroups();
     }
- 
-    /**
-     * Organizes students into groups based on shared course (CRN) + time
-     * slot. A group needs at least 2 students; singles are left ungrouped.
-     * 
-     * @param studentList The students to organize into groups.
-     * @return The list of Group objects that were formed.
-     */
+
     public ArrayList<Group> makeGroups(ArrayList<Student> studentList)
     {
         ArrayList<Group> result = new ArrayList<>();
         LinkedHashMap<String, ArrayList<Student>> buckets = new LinkedHashMap<>();
         LinkedHashMap<String, Course> bucketCourse = new LinkedHashMap<>();
- 
+
         for (Student s : studentList)
         {
             for (Course c : s.getCourses())
-            {
-                String key = c.getCourseName() + "|" + c.getTime();
-                buckets.computeIfAbsent(key, k -> new ArrayList<>()).add(s);
-                bucketCourse.putIfAbsent(key, c);
-            }
+        {
+            String key = courseKey(c);
+            buckets.computeIfAbsent(key, k -> new ArrayList<>()).add(s);
+            bucketCourse.putIfAbsent(key, c);
         }
- 
+        }
+
         for (String key : buckets.keySet())
         {
             ArrayList<Student> members = buckets.get(key);
@@ -421,6 +413,29 @@ public class Main
             }
         }
         return result;
+    }
+
+    /**
+     * Builds a normalized identity key for a Course so that two Course
+     * objects describing the same real class -- one built from a CRN
+     * lookup, the other typed in manually as name/days/time -- land in the
+     * same bucket even if their raw strings differ in case, spacing, or
+     * day order.
+     *
+     * @param c The course to key.
+     * @return A normalized "name|days|time" key.
+     */
+    private String courseKey(Course c)
+    {
+        String name = c.getCourseName().trim().toUpperCase();
+
+        char[] dayChars = c.getDays().replaceAll("\\s+", "").toUpperCase().toCharArray();
+        java.util.Arrays.sort(dayChars);
+        String days = new String(dayChars);
+
+        String time = c.getTime().replaceAll("\\s+", "").toUpperCase();
+
+        return name + "|" + days + "|" + time;
     }
  
     /**
