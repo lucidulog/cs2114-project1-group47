@@ -71,10 +71,6 @@ public class Course {
    // }
 
 
-   public static void main(String[] args){
-       Course CS_2114 = new Course(83531);
-       System.out.println(CS_2114);
-   }
 
 
    /**
