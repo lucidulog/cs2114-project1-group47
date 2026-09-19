@@ -70,7 +70,7 @@ public class Main
     public void printClassInputInstructions()
     {
         System.out.println("Please add the class using one of the following formats:");
-        System.out.println(" 1) CRN Number: Enter the 5-digit CRN (e.g., 12345)");
+        System.out.println(" 1) CRN Number: Enter the 5-digit CRN (e.g., CRN12345)");
         System.out.println(" 2) Class & Time: Enter class name and time slot (e.g., CS 2114 | MWF3:30-4:20)");
     }
     
@@ -203,6 +203,7 @@ public class Main
         {
             System.out.print("Enter Course (Format: CS_2114 TR 3:30PM-4:20PM) or 'done': ");
             String input = scanner.nextLine().trim();
+            System.out.println("Input received: " + input); // Debugging line
  
             if (input.equalsIgnoreCase("done") || input.equalsIgnoreCase("exit"))
             {
@@ -211,24 +212,18 @@ public class Main
  
             String[] parts = input.split("\\s+");
  
-            if (parts.length != 3)
-            {
-                System.out.println("Invalid format! Must enter all 3 parts separated by spaces.");
-                System.out.println("Example: CS_2114 TR 3:30PM-4:20PM\n");
-                continue;
-            }
- 
             if (input.contains("CRN")) {
                 // Handle CRN input
-                String CRN = input;
-                Course newCourse = new Course(CRN);
+                String CRN_number = input.substring(3);
+                System.out.println("CRN Number received: " + CRN_number); // Debugging line
+                Course newCourse = new Course(CRN_number);
                 if (newCourse != null) {
                     currentStudent.addCourse(newCourse);
                     System.out.println("Added: " + newCourse + "\n");
                 }
                 continue;
             }
-            else {
+            else if (parts.length == 3) {
                 // Handle Class & Time input
                 String[] classParts = input.substring(1).trim().split(" ");
                 if (classParts.length != 3) {
@@ -246,6 +241,11 @@ public class Main
                     System.out.println("Added: " + newCourse + "\n");
                 }
                 continue;
+            }
+            else {
+                System.out.println("Invalid input format! Please enter either a CRN or a class with days and time.");
+                System.out.println("Example CRN: CRN12345");
+                System.out.println("Example Class & Time: CS_2114 MW 3:30PM-4:20PM\n");
             }
         }
     }
@@ -426,7 +426,7 @@ public class Main
     /**
      * Prints every registered student and the courses they're enrolled in.
      */
-    private void listStudents()
+    public void listStudents()
     {
         if (students.isEmpty())
         {
