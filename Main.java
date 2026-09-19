@@ -15,6 +15,7 @@ public class Main
 
     private ArrayList<Student> students;
     private ArrayList<Group> groups;
+    private ArrayList<String> locations;
 
     //~ Constructor ...........................................................
 
@@ -26,6 +27,29 @@ public class Main
     {
         students = new ArrayList<>();
         groups = new ArrayList<>();
+        locations = new ArrayList<>();
+        // Predefined list of meeting locations
+        locations.add("Newman Library Floor 2");
+        locations.add("Newman Library Floor 4 Cubicles");
+        locations.add("Newman Library Group Floor 4 Study Rooms");
+        locations.add("The Bridge");
+        locations.add("Torgersen Hall");
+        locations.add("New Classroom Building Floor 1 (NCB)");
+        locations.add("New Classroom Building Floor 2 (NCB)");
+        locations.add("New Classroom Building Floor 3 (NCB)");
+        locations.add("Undergraduate Science Labratory Building (USLB)");
+        locations.add("Squires Student Center");
+        locations.add("Data and Decision Sciences (DDS)");
+        locations.add("Holden Hall");
+        locations.add("Surge Space Building");
+        locations.add("Dietrick Dining Hall Floor 1");
+        locations.add("Goodwin Hall Floor");
+        locations.add("Hitt Hall");
+        locations.add("Lavery Hall (Inside)");
+        locations.add("Lavery Hall (Outside)");
+        locations.add("McBryde Hall Floor 1");
+        locations.add("McBryde Hall Floor 2");
+        locations.add("McBryde Hall Floor 3");
     }
     
     //~ Methods ...............................................................
@@ -150,10 +174,6 @@ public class Main
             {
                 System.out.println(" - " + s.getName());
             }
-        }
-        else if (command.equalsIgnoreCase("groups"))
-        {
-            System.out.println("View all groups feature coming soon!"); //listGroups();
         }
         else 
         {
@@ -479,6 +499,11 @@ public class Main
         for (Group g : groups)
         {
             System.out.print(g);
+            if (!locations.isEmpty())
+            {
+                int idx = (int)(Math.random() * locations.size());
+                System.out.print("Suggested Meeting Location: " + locations.get(idx) + "\n");
+            }
         }
     }
  
