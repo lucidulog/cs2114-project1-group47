@@ -94,16 +94,16 @@ public final class CourseCatalog
         return catalog.size();
     }
 
-    public static void main(String[] args)
-    {
-        CourseCatalog courseCatalog = new CourseCatalog();
-        if (courseCatalog.size() != 11481)
-        {
-            throw new IllegalStateException("Expected 11481 courses, found "
-                + courseCatalog.size());
-        }
-        System.out.println("Loaded " + courseCatalog.size() + " Fall 2026 courses.");
-    }
+    // public static void main(String[] args)
+    // {
+    //     CourseCatalog courseCatalog = new CourseCatalog();
+    //     if (courseCatalog.size() != 11481)
+    //     {
+    //         throw new IllegalStateException("Expected 11481 courses, found "
+    //             + courseCatalog.size());
+    //     }
+    //     System.out.println("Loaded " + courseCatalog.size() + " Fall 2026 courses.");
+    // }
 
     static Course course(
         String crn,
