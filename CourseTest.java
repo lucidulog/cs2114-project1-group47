@@ -2,6 +2,8 @@
 
 // import org.junit.jupiter.api.BeforeEach;
 // import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.extension
+import junit.framework.TestCase;
 
 
 /**
@@ -28,6 +30,7 @@ public class CourseTest extends student.TestCase
      */
     public void testGetters()
     {
+        System.out.println(org.junit.jupiter.api.AssertionUtils.class.getPackage().getImplementationVersion());
         assertEquals("CS_2114", course1.getCourseName());
         assertEquals("9:00AM-11:00AM", course1.getTime());
         assertEquals("TR", course1.getDays());
