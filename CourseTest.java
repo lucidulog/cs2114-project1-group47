@@ -1,16 +1,17 @@
-// import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 // import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.extension
-import junit.framework.TestCase;
-
+// import junit.framework.TestCase;
 
 /**
  * Tests the Course class.
  */
-public class CourseTest extends student.TestCase
+public class CourseTest
 {
+    
     private Course course1;
     private Course course2;
 
@@ -18,6 +19,7 @@ public class CourseTest extends student.TestCase
     /**
      * Sets up each test method.
      */
+    @BeforeEach 
     public void setUp()
     {
         course1 = new Course("CS_2114", "9:00AM-11:00AM", "TR");
@@ -28,9 +30,9 @@ public class CourseTest extends student.TestCase
     /**
      * Tests Course's getters.
      */
+    @Test
     public void testGetters()
     {
-        System.out.println(org.junit.jupiter.api.AssertionUtils.class.getPackage().getImplementationVersion());
         assertEquals("CS_2114", course1.getCourseName());
         assertEquals("9:00AM-11:00AM", course1.getTime());
         assertEquals("TR", course1.getDays());
@@ -44,6 +46,7 @@ public class CourseTest extends student.TestCase
     /**
      * Tests Course's toString() method.
      */
+    @Test
     public void testToString()
     {
         assertEquals(
@@ -59,6 +62,7 @@ public class CourseTest extends student.TestCase
     /**
      * Tests invalid course name.
      */
+    @Test
     public void testInvalidCourseName()
     {
         assertThrows(
@@ -70,6 +74,7 @@ public class CourseTest extends student.TestCase
     /**
      * Tests invalid days.
      */
+    @Test
     public void testInvalidDays()
     {
         assertThrows(
@@ -81,6 +86,7 @@ public class CourseTest extends student.TestCase
     /**
      * Tests invalid time.
      */
+    @Test
     public void testInvalidTime()
     {
         assertThrows(
@@ -92,6 +98,7 @@ public class CourseTest extends student.TestCase
     /**
      * Tests the Course constructor using a CRN.
      */
+    @Test
     public void testCRNConstructor()
     {
         Course course = new Course("83531");
