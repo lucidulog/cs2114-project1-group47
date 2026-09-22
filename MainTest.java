@@ -22,8 +22,8 @@ public class MainTest
     /**
      * This is the setUp method that is run before every test. 
      */
-    @BeforeEach 
-    public void sestUp()
+    @BeforeEach
+    public void setUp()
     {
         main = new Main(); 
     }

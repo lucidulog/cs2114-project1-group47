@@ -6,12 +6,12 @@ import java.util.Scanner;
 /**
  * Main command-line application interface for HokieConnect.
  *
- * @author Luci Dulog (906619962)
+ * @author Luci Dulog (906619962) and Hannah Dai (906872793)
  * @version (2026.09.19)
  */
 public class Main
 {
-    //~ Fields ................................................................
+    //~ Fields ............................................................
 
     private ArrayList<Student> students;
     private ArrayList<Group> groups;
@@ -212,12 +212,8 @@ public class Main
      * 
      * @param scanner The active Scanner object to read user input.
      */
-<<<<<<< Updated upstream
-    public void addCoursesForCurrentStudent(Scanner scanner) {
-=======
     public void addCoursesForCurrentStudent(Scanner scanner) 
     {
->>>>>>> Stashed changes
         Student currentStudent = students.get(students.size() - 1);
         System.out.println("--- Adding courses for " + currentStudent.getName() + " ---");
  
@@ -236,7 +232,6 @@ public class Main
             if (input.contains("CRN")) {
                 // Handle CRN input
                 String CRN_number = input.substring(3);
-                System.out.println("CRN Number received: " + CRN_number); // Debugging line
                 Course newCourse = new Course(CRN_number);
                 if (newCourse != null) {
                     currentStudent.addCourse(newCourse);
@@ -496,6 +491,11 @@ public class Main
      */
     private void listGroups()
     {
+        int WINDOW_START = 7 * 60;   // 7:00 AM
+        int WINDOW_END = 22 * 60;     // 10:00 PM
+        int MEETING_LENGTH = 30;      // minutes
+        char[] DAYS = {'M', 'T', 'W', 'R', 'F', 'S', 'U'};
+        int MAX_ATTEMPTS = 500;       // safety cap so a fully-booked group can't hang forever
         if (groups.isEmpty())
         {
             System.out.println("No groups formed yet. Try 'make group'.");
@@ -504,12 +504,81 @@ public class Main
         for (Group g : groups)
         {
             System.out.print(g);
+
+            char day = 0;
+            int start = 0;
+            boolean found = false;
+
+            for (int attempt = 0; attempt < MAX_ATTEMPTS && !found; attempt++)
+            {
+                day = DAYS[(int) (Math.random() * DAYS.length)];
+                start = WINDOW_START + (int) (Math.random() * (WINDOW_END - WINDOW_START - MEETING_LENGTH));
+                int end = start + MEETING_LENGTH;
+
+                boolean collision = false;
+                for (Student s : g.getMembers())
+                {
+                    for (Course c : s.getCourses())
+                    {
+                        if (c.getDays().indexOf(day) < 0)
+                        {
+                            continue; // this course doesn't meet on the candidate day
+                        }
+                        if (start < c.getEndTime() && c.getStartTime() < end)
+                        {
+                            collision = true;
+                            break;
+                        }
+                    }
+                    if (collision)
+                    {
+                        break;
+                    }
+                }
+
+                found = !collision;
+            }
+
+            if (found)
+            {
+                System.out.println("Suggested Meeting Time: " + dayName(day) + " at " + formatClock(start));
+            }
+            else
+            {
+                System.out.println("No common free time found between 7:00 AM and 10:00 PM.");
+            }
+
             if (!locations.isEmpty())
             {
-                int idx = (int)(Math.random() * locations.size());
+                int idx = (int) (Math.random() * locations.size());
                 System.out.print("Suggested Meeting Location: " + locations.get(idx) + "\n");
             }
         }
+    }
+
+    private String dayName(char code)
+    {
+        switch (code)
+        {
+            case 'M': return "Monday";
+            case 'T': return "Tuesday";
+            case 'W': return "Wednesday";
+            case 'R': return "Thursday";
+            case 'F': return "Friday";
+            case 'S': return "Saturday";
+            case 'U': return "Sunday";
+            default:  return String.valueOf(code);
+        }
+    }
+
+    private String formatClock(int minutes)
+    {
+        int hour24 = minutes / 60;
+        int minute = minutes % 60;
+        String meridiem = (hour24 < 12) ? "AM" : "PM";
+        int hour12 = hour24 % 12;
+        if (hour12 == 0) hour12 = 12;
+        return String.format("%d:%02d %s", hour12, minute, meridiem);
     }
  
     /**
