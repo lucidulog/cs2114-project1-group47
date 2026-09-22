@@ -198,3 +198,6 @@ javac -d bin -cp "bin:lib/*" StudentTest.java CourseTest.java MainTest.java Grou
 java -jar lib/junit-platform-console-standalone-*.jar execute --class-path bin --scan-class-path
 ```
 
+At the end of all tests, you should be able to see the following:
+![JUnit Tests](files/junit-tests.png)
+
