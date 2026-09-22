@@ -1,3 +1,11 @@
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension
+//import junit.framework.TestCase;
+
 
 //As a Hokie, I will conduct myself with honor and integrity at all times.
 //I will not lie, cheat, or steal, nor will I accept the actions of those
@@ -14,6 +22,7 @@ public class MainTest
     /**
      * This is the setUp method that is run before every test. 
      */
+    @BeforeEach 
     public void sestUp()
     {
         main = new Main(); 
@@ -23,6 +32,7 @@ public class MainTest
      * tests the Main() constructor 
      * should not have students or groups registered
      */
+    @Test
     public void testConstructor()
     {
         assertEquals(0, main.getStudents().size());
@@ -32,6 +42,7 @@ public class MainTest
     /**
      * Tests the printWelcome() method
      */
+    @Test
     public void testPrintWelcome()
     {
         main.printWelcome(); 
@@ -42,6 +53,7 @@ public class MainTest
     /**
      * Tests the printHelp() method
      */
+    @Test
     public void testPrintHelp()
     {
         main.printHelp();
@@ -54,6 +66,7 @@ public class MainTest
     /**
      * Tests the printClassInputInstructions() method 
      */
+    @Test
     public void testPrintClassInputInstructions()
     {
         main.printClassInputInstructions(); 
@@ -66,6 +79,7 @@ public class MainTest
      * Tests the processCommand() with "help" and an 
      * unrecognized command 
      */
+    @Test
     public void testProcessCommand()
     {
         Scanner scanner = new Scanner(""); 
@@ -82,6 +96,7 @@ public class MainTest
      * Tests the processCommand() with "add course" without any 
      * students being added: should be an error and doesn't crash
      */
+    @Test
     public void testProcessCommandAddCourseNoStudent()
     {
         Scanner scanner = new Scanner(""); 
@@ -95,6 +110,7 @@ public class MainTest
      * Tests the addStudent(Scanner) method. checks when a student 
      * is added and when it is blank 
      */
+    @Test
     public void testAddStudent()
     {
         Scanner scanner = new Scanner("Isabelle\n"); 
@@ -115,6 +131,7 @@ public class MainTest
      * Tests the addCoursesForCurrentStudent(Scanner) method 
      * with a valid and invalid entry. 
      */
+    @Test
     public void testAddCoursesForCurrentStudent()
     {
         Scanner nameScanner = new Scanner("Gracie\n"); 
@@ -139,6 +156,7 @@ public class MainTest
      * Tests the addCoursesForCurrentStudent(Scanner) using the 
      * CRN entry format
      */
+    @Test
     public void testAddCoursesForCurrentStudentCRN()
     {
         Scanner nameScanner = new Scanner("Janelle\n"); 
@@ -156,6 +174,7 @@ public class MainTest
      * Tests the viewStudentSchedule(Scanner) for current students 
      * and those that don't exist or were never added 
      */
+    @Test
     public void testViewStudentSchedule()
     {
         Scanner nameScanner = new Scanner("Josie\n"); 
@@ -174,6 +193,7 @@ public class MainTest
      * tests the doMakeGroups() method with no students, and after 
      * two students with the same course and time slot 
      */
+    @Test
     public void testDoMakeGroups()
     {
         main.doMakeGroups(); 
@@ -194,6 +214,7 @@ public class MainTest
      * and time slot this should cfreate a group and other way 
      * around 
      */
+    @Test
     public void testMakeGroups()
     {
         Student s1 = new Student("Kyle"); 
@@ -220,6 +241,7 @@ public class MainTest
      * Tests listStudents() with no students and with students 
      * that have courses registered
      */
+    @Test
     public void testListStudents()
     {
         main.listStudents();
@@ -236,6 +258,7 @@ public class MainTest
     /**
      * Tests the getStudents() and getGroups() gettter methods
      */
+    @Test
     public void testGetters()
     {
         assertTrue(main.getStudents().isEmpty()); 
@@ -249,6 +272,7 @@ public class MainTest
     /**
      * Tests startConsole() by simulating typed commands
      */
+    @Test
     pubic void testStartConsole()
     {
         systemIn("help\nfoobar\nexit\n");
@@ -263,6 +287,7 @@ public class MainTest
      * Tests startConsole() with only blank lines 
      * should not crash
      */
+    @Test
     public void testStartConsoleBlankInput()
     {
         systemIn("\n\nexit\n");
@@ -275,6 +300,7 @@ public class MainTest
      * tests the main(String[]) entry point runs the console loop 
      * and exits it 
      */
+    @Test
     public void testMain()
     {
         systemIn("exit\n"); 
