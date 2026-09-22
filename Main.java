@@ -72,6 +72,7 @@ public class Main
         System.out.println(" - help: displays instructions"); 
         System.out.println(" - add student: adds a student record"); 
         System.out.println(" - add course: adds course(s) to the most recently added student");
+        System.out.println(" - done: completes a students course profile")
         System.out.println(" - view schedule: displays all courses registered for a student");
         System.out.println(" - make group: forms study groups once the last person " 
             + "is done adding their classes"); 
