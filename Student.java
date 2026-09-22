@@ -58,6 +58,9 @@ public class Student
      */
     public void addCourse(Course course) 
     {
+        if (course == null) {
+            throw new NullPointerException("Course cannot be null");
+        }
         courses.add(course);
     }
 }
