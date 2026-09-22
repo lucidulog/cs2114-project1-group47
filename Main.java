@@ -72,18 +72,14 @@ public class Main
         System.out.println(" - help: displays instructions"); 
         System.out.println(" - add student: adds a student record"); 
         System.out.println(" - add course: adds course(s) to the most recently added student");
-        System.out.println(" - done: completes a students course profile")
+        System.out.println(" - done: completes a students course profile");
         System.out.println(" - view schedule: displays all courses registered for a student");
-        System.out.println(" - make group: forms study groups once the last person " 
-            + "is done adding their classes"); 
+        System.out.println(" - make group: forms study groups once the last person is done adding their classes");
         System.out.println(" - exit: exits the application"); 
         
         System.out.println("\n=== Course Entry Format ===");
-        System.out.println("You can enter course info either in ONE LINE or STEP-BY-STEP:");
+        System.out.println("You should enter course info in ONE LINE");
         System.out.println("  One-line format : CS_2114 TR 3:30PM-4:20PM");
-        System.out.println("  Step 1 Name     : CS_2114         (Department Number with underscore)");
-        System.out.println("  Step 2 Days     : TR or MWF or F  (Meeting days)");
-        System.out.println("  Step 3 Time     : 3:30PM-4:20PM   (Start-End time range)");
     }
 
     /**
