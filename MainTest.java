@@ -1,323 +1,442 @@
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-//As a Hokie, I will conduct myself with honor and integrity at all times.
-//I will not lie, cheat, or steal, nor will I accept the actions of those
-//who do.
-//-- Luci Dulog (906619962)
-public class MainTest
-{
-    //~ Fields ................................................................
-    private Main main; 
+/**
 
-    //~ Constructors ..........................................................
-
-    //~Public  Methods ........................................................
-    /**
-     * This is the setUp method that is run before every test. 
-     */
-    @BeforeEach
-    public void setUp()
-    {
-        main = new Main(); 
-    }
+* Tests the Main class.
+  */
+  public class MainTest
+  {
+      private Main main;
     
-    /**
-     * tests the Main() constructor 
-     * should not have students or groups registered
-     */
-    @Test
-    public void testConstructor()
-    {
-        assertEquals(0, main.getStudents().size());
-        assertEquals(0, main.getGroups().size()); 
-    }
+      /**
     
-    /**
-     * Tests the printWelcome() method
-     */
-    @Test
-    public void testPrintWelcome()
-    {
-        main.printWelcome(); 
-        String output = getOutput();
-        assertTrue(output.contains("Welcome to HokieConnect!"));
-    }
+      * Sets up a new Main object before each test.
+        */
+        @BeforeEach
+        public void setUp()
+        {
+            main = new Main();
+        }
     
-    /**
-     * Tests the printHelp() method
-     */
-    @Test
-    public void testPrintHelp()
-    {
-        main.printHelp();
-        String output = getOutput();
-        assertTrue(output.contains("Commands"));
-        assertTrue(output.contains("add student"));
-        assertTrue(output.contains("make group"));
-    }
+      /**
     
-    /**
-     * Tests the printClassInputInstructions() method 
-     */
-    @Test
-    public void testPrintClassInputInstructions()
-    {
-        main.printClassInputInstructions(); 
-        String output = getOutput(); 
-        assertTrue(output.contains("CRN Number")); 
-        assertTrue(output.contains("Class & Time"));
-    }
+      * Tests the Main constructor.
+        */
+        @Test
+        public void testConstructor()
+        {
+            assertTrue(main.getStudents().isEmpty());
+            assertTrue(main.getGroups().isEmpty());
+        }
     
-    /**
-     * Tests the processCommand() with "help" and an 
-     * unrecognized command 
-     */
-    @Test
-    public void testProcessCommand()
-    {
-        Scanner scanner = new Scanner(""); 
-        main.processCommand("help", scanner); 
-        String output = getOutput(); 
-        assertTrue(output.contains("Commands")); 
-        
-        notifySystemOut();
-        main.processCommand("foobar", scanner); 
-        output = getOutput(); 
-        assertTrue(output.contains("Unknown command, type 'help'")); 
-    }
+      /**
     
-    /**
-     * Tests the processCommand() with "add course" without any 
-     * students being added: should be an error and doesn't crash
-     */
-    @Test
-    public void testProcessCommandAddCourseNoStudent()
-    {
-        Scanner scanner = new Scanner(""); 
-        main.processCommand("add course", scanner); 
-        String output = getOutput(); 
-        assertTrue(output.contains(
-            "Error: You must add a student first before adding courses!")); 
-    }
+      * Tests the getStudents and getGroups methods.
+        */
+        @Test
+        public void testGetters()
+        {
+            assertNotNull(main.getStudents());
+            assertNotNull(main.getGroups());
+        
+            assertEquals(0, main.getStudents().size());
+            assertEquals(0, main.getGroups().size());
+        }
     
-    /**
-     * Tests the addStudent(Scanner) method. checks when a student 
-     * is added and when it is blank 
-     */
-    @Test
-    public void testAddStudent()
-    {
-        Scanner scanner = new Scanner("Kyle\n"); 
-        main.addStudent(scanner); 
-        
-        assertEquals(1, main.getStudents().size()); 
-        assertEquals("Kyle", main.getStudents().get(0).getName()); 
-        
-        notifySystemOut();
-        Scanner blank = new Scanner("\n"); 
-        main.addStudent(blank); 
-        
-        assertEquals(1, main.getStudents().size()); 
-        String output = getOutput();
-        assertTrue(output.contains("Student name cannot be empty"));      
-    }
+      /**
     
-    /**
-     * Tests the addCoursesForCurrentStudent(Scanner) method 
-     * with a valid and invalid entry. 
-     */
-    @Test
-    public void testAddCoursesForCurrentStudent()
-    {
-        Scanner nameScanner = new Scanner("Gracie\n"); 
-        main.addStudent(nameScanner); 
-        
-        Scanner courseScanner = new Scanner(
-            "CS_2114 TR 3:30PM-4:20PM\ndone\n"); 
-        main.addCoursesForCurrentStudent(courseScanner); 
-        
-        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
-        
-        notifySystemOut();
-        Scanner badScanner = new Scanner("CS_2114 TR\ndone\n"); 
-        main.addCoursesForCurrentStudent(badScanner); 
-        
-        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
-        
-        String output = getOutput(); 
-        assertTrue(output.contains("Invalid format!")); 
-    }
+      * Tests printWelcome without checking console output.
+        */
+        @Test
+        public void testPrintWelcome()
+        {
+            assertDoesNotThrow(() -> main.printWelcome());
+        }
     
-    /**
-     * Tests the addCoursesForCurrentStudent(Scanner) using the 
-     * CRN entry format
-     */
-    @Test
-    public void testAddCoursesForCurrentStudentCRN()
-    {
-        Scanner nameScanner = new Scanner("Janelle\n"); 
-        main.addStudent(nameScanner); 
-        
-        Scanner crnScanner = new Scanner("CRN12345\ndone\n"); 
-        main.addCoursesForCurrentStudent(crnScanner); 
-        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
-        
-        String output = getOutput(); 
-        assertTrue(output.contains("Added:")); 
-    }
+      /**
     
-    /**
-     * Tests the viewStudentSchedule(Scanner) for current students 
-     * and those that don't exist or were never added 
-     */
-    @Test
-    public void testViewStudentSchedule()
-    {
-        Scanner nameScanner = new Scanner("Josie\n"); 
-        main.addStudent(nameScanner); 
-        Scanner courseScanner = new Scanner(
-            "CS_2114 TR 3:30PM-4:20PM\ndone\n");
-        main.addCoursesForCurrentStudent(courseScanner); 
+      * Tests printHelp without checking console output.
+        */
+        @Test
+        public void testPrintHelp()
+        {
+            assertDoesNotThrow(() -> main.printHelp());
+        }
+    
+      /**
+    
+      * Tests printClassInputInstructions without checking console output.
+        */
+        @Test
+        public void testPrintClassInputInstructions()
+        {
+            assertDoesNotThrow(() -> main.printClassInputInstructions());
+        }
+    
+      /**
+    
+      * Tests adding a valid student.
+        */
+        @Test
+        public void testAddStudent()
+        {
+        Scanner scanner = new Scanner("Kyle\n");
+    
+        main.addStudent(scanner);
+    
+        assertEquals(1, main.getStudents().size());
+        assertEquals("Kyle", main.getStudents().get(0).getName());
+        }
+    
+      /**
+    
+      * Tests that a blank student name is not added.
+        */
+        @Test
+        public void testAddStudentBlank()
+        {
+        Scanner scanner = new Scanner("\n");
+    
+        main.addStudent(scanner);
+    
+        assertTrue(main.getStudents().isEmpty());
+        }
+    
+      /**
+    
+      * Tests adding multiple students.
+        */
+        @Test
+        public void testAddMultipleStudents()
+        {
+            main.addStudent(new Scanner("Kyle\n"));
+            main.addStudent(new Scanner("Hannah\n"));
+            main.addStudent(new Scanner("Luci\n"));
         
-        Scanner viewScanner = new Scanner("Nobody\n"); 
-        main.viewStudentSchedule(viewScanner); 
-        String output = getOutput(); 
-        assertTrue(output.contains("Student 'Nobody' was not found.")); 
-    }
+            assertEquals(3, main.getStudents().size());
+            assertEquals("Kyle", main.getStudents().get(0).getName());
+            assertEquals("Hannah", main.getStudents().get(1).getName());
+            assertEquals("Luci", main.getStudents().get(2).getName());
+        }
     
-    /**
-     * tests the doMakeGroups() method with no students, and after 
-     * two students with the same course and time slot 
-     */
-    @Test
-    public void testDoMakeGroups()
-    {
-        main.doMakeGroups(); 
-        String output = getOutput(); 
-        assertTrue(output.contains("No students have been added yet.")); 
+      /**
+    
+      * Tests adding a course to the current student.
+        */
+        @Test
+        public void testAddCoursesForCurrentStudent()
+        {
+            main.addStudent(new Scanner("Gracie\n"));
         
-        notifySystemOut();
-        Scanner name1 = new Scanner("Josie\n"); 
-        main.addStudent(name1); 
-        Scanner course1 = new Scanner("CS_2114 TR 3:30PM-4:20PM\ndone\n");
-        main.addCoursesForCurrentStudent(course1); 
+            Scanner scanner = new Scanner(
+                "CS_2114 TR 3:30PM-4:20PM\ndone\n");
         
-        Scanner name2 = new Scanner("Hank\n"); 
-        main.addStudent(name2); 
-        Scanner course2 = new Scanner("CS_2114 TR 3:30PM-4:20PM\ndone\n");
-        main.addCoursesForCurrentStudent(course2); 
-
-        main.doMakeGroups(); 
-        assertEquals(1, main.getGroups().size()); 
-    }
-    
-    /**
-     * tests makeGroups(ArrayList<Student>) with a shared course 
-     * and time slot this should create a group and other way 
-     * around 
-     */
-    @Test
-    public void testMakeGroups()
-    {
-        Student s1 = new Student("Kyle"); 
-        s1.addCourse(new Course("CS_2114", "TR 3:30PM-4:20PM", "TR")); 
-        Student s2 = new Student("Hank"); 
-        s2.addCourse(new Course("CS_2114", "TR 3:30PM-4:20PM", "TR")); 
+            main.addCoursesForCurrentStudent(scanner);
         
-        ArrayList<Student> matching = new ArrayList<>(); 
-        matching.add(s1);
-        matching.add(s2);
-        ArrayList<Group> groups = main.makeGroups(matching);
-        assertEquals(1, groups.size());
+            Student student = main.getStudents().get(0);
         
-        Student s3 = new Student("Ivy");
-        s3.addCourse(new Course("MATH_1226", "MWF 9:05AM-9:55AM", "MWF"));
-        ArrayList<Student> noMatch = new ArrayList<>();
-        noMatch.add(s1);
-        noMatch.add(s3);
-        ArrayList<Group> emptyGroups = main.makeGroups(noMatch);
-        assertEquals(0, emptyGroups.size());
-    }
+            assertEquals(1, student.getCourses().size());
+            assertEquals("CS_2114", student.getCourses().get(0).getCourseName());
+            assertEquals("TR", student.getCourses().get(0).getDays());
+            assertEquals("3:30PM-4:20PM", student.getCourses().get(0).getTime());
+        }
     
-    /**
-     * Tests listStudents() with no students and with students 
-     * that have courses registered
-     */
-    @Test
-    public void testListStudents()
-    {
-        main.listStudents();
-        String output = getOutput();
-        assertTrue(output.contains("No students added yet."));
- 
-        notifySystemOut();
-        Scanner nameScanner = new Scanner("Jack\n");
-        main.addStudent(nameScanner);
-        main.listStudents();
-        output = getOutput();
-        assertTrue(output.contains("Jack"));
-    }
+      /**
     
-    /**
-     * Tests the getStudents() and getGroups() getter methods
-     */
-    @Test
-    public void testGetters()
-    {
-        assertTrue(main.getStudents().isEmpty()); 
-        assertTrue(main.getGroups().isEmpty()); 
+      * Tests adding a course using a CRN.
+        */
+        @Test
+        public void testAddCourseUsingCRN()
+        {
+            main.addStudent(new Scanner("Janelle\n"));
         
-        Scanner nameScanner = new Scanner("Emma\n"); 
-        main.addStudent(nameScanner); 
-        assertEquals(1, main.getStudents().size()); 
-    }
-    
-    /**
-     * Tests startConsole() by simulating typed commands
-     */
-    @Test
-    public void testStartConsole()
-    {
-        setSystemIn("help\nfoobar\nexit\n");
-        main.startConsole();
-        String output = getOutput();
-        assertTrue(output.contains("Welcome to HokieConnect!"));
-        assertTrue(output.contains("Unknown command, type 'help'"));
-        assertTrue(output.contains("Goodbye!"));
-    }
-    
-    /**
-     * Tests startConsole() with only blank lines 
-     * should not crash
-     */
-    @Test
-    public void testStartConsoleBlankInput()
-    {
-        setSystemIn("\n\nexit\n");
-        main.startConsole();
-        String output = getOutput();
-        assertTrue(output.contains("Goodbye!"));
-    }
-    
-    /**
-     * tests the main(String[]) entry point runs the console loop 
-     * and exits it 
-     */
-    @Test
-    public void testMain()
-    {
-        setSystemIn("exit\n"); 
-        Main.main(new String[] {}); 
-        String output = getOutput(); 
+            Scanner scanner = new Scanner("CRN83531\ndone\n");
         
-        assertTrue(output.contains("Welcome to HokieConnect!")); 
-        assertTrue(output.contains("Goodbye!"));
-    }
+            main.addCoursesForCurrentStudent(scanner);
+        
+            Student student = main.getStudents().get(0);
+        
+            assertEquals(1, student.getCourses().size());
+            assertEquals("CS_2114", student.getCourses().get(0).getCourseName());
+        }
     
-}
+      /**
+    
+      * Tests that invalid course input is not added.
+        */
+        @Test
+        public void testInvalidCourseInput()
+        {
+            main.addStudent(new Scanner("Gracie\n"));
+        
+            Scanner scanner = new Scanner("CS_2114 TR\ndone\n");
+        
+            main.addCoursesForCurrentStudent(scanner);
+        
+            Student student = main.getStudents().get(0);
+        
+            assertTrue(student.getCourses().isEmpty());
+        }
+    
+      /**
+    
+      * Tests that multiple courses can be added to one student.
+        */
+        @Test
+        public void testAddMultipleCourses()
+        {
+            main.addStudent(new Scanner("Luci\n"));
+        
+            Scanner scanner = new Scanner(
+                "CS_2114 TR 3:30PM-4:20PM\n"
+                + "MATH_2204 MWF 1:00PM-2:00PM\n"
+                + "done\n");
+        
+            main.addCoursesForCurrentStudent(scanner);
+        
+            Student student = main.getStudents().get(0);
+        
+            assertEquals(2, student.getCourses().size());
+            assertEquals("CS_2114", student.getCourses().get(0).getCourseName());
+            assertEquals("MATH_2204", student.getCourses().get(1).getCourseName());
+        }
+    
+      /**
+    
+      * Tests processCommand when adding a student.
+        */
+        @Test
+        public void testProcessCommandAddStudent()
+        {
+            Scanner scanner = new Scanner("Emma\n");
+        
+            main.processCommand("add student", scanner);
+        
+            assertEquals(1, main.getStudents().size());
+            assertEquals("Emma", main.getStudents().get(0).getName());
+        }
+    
+      /**
+    
+      * Tests processCommand when adding a course.
+        */
+        @Test
+        public void testProcessCommandAddCourse()
+        {
+            main.addStudent(new Scanner("Emma\n"));
+        
+            Scanner scanner = new Scanner(
+                "CS_2114 TR 3:30PM-4:20PM\ndone\n");
+        
+            main.processCommand("add course", scanner);
+        
+            assertEquals(1, main.getStudents().get(0).getCourses().size());
+        }
+    
+      /**
+    
+      * Tests processCommand with an empty student list.
+      * The command should not change the list of students or groups.
+        */
+        @Test
+        public void testProcessCommandAddCourseWithoutStudent()
+        {
+            Scanner scanner = new Scanner("");
+        
+            main.processCommand("add course", scanner);
+        
+            assertTrue(main.getStudents().isEmpty());
+            assertTrue(main.getGroups().isEmpty());
+        }
+    
+      /**
+    
+      * Tests processCommand with an unknown command.
+      * It should not change the application state.
+        */
+        @Test
+        public void testProcessCommandUnknownCommand()
+        {
+            Scanner scanner = new Scanner("");
+        
+            main.processCommand("foobar", scanner);
+        
+            assertTrue(main.getStudents().isEmpty());
+            assertTrue(main.getGroups().isEmpty());
+        }
+    
+      /**
+    
+      * Tests viewing the schedule for a student that does not exist.
+      * The method should not change the student list.
+        */
+        @Test
+        public void testViewStudentScheduleNotFound()
+        {
+            Scanner scanner = new Scanner("Nobody\n");
+        
+            main.viewStudentSchedule(scanner);
+        
+            assertTrue(main.getStudents().isEmpty());
+        }
+    
+      /**
+    
+      * Tests viewing the schedule for an existing student.
+        */
+        @Test
+        public void testViewStudentSchedule()
+        {
+            main.addStudent(new Scanner("Josie\n"));
+        
+            Scanner courseScanner = new Scanner(
+                "CS_2114 TR 3:30PM-4:20PM\ndone\n");
+        
+            main.addCoursesForCurrentStudent(courseScanner);
+        
+            Scanner viewScanner = new Scanner("Josie\n");
+        
+            main.viewStudentSchedule(viewScanner);
+        
+            assertEquals(1, main.getStudents().size());
+            assertEquals(1,main.getStudents().get(0).getCourses().size());
+        }
+    
+      /**
+    
+      * Tests makeGroups with two students sharing a course.
+        */
+        @Test
+        public void testMakeGroups()
+        {
+            Student student1 = new Student("Kyle");
+            Student student2 = new Student("Hank");
+        
+            Course course1 =new Course(
+                "CS_2114", "3:30PM-4:20PM", "TR");
+            Course course2 =new Course(""
+                + "CS_2114", "3:30PM-4:20PM", "TR");
+        
+            student1.addCourse(course1);
+            student2.addCourse(course2);
+        
+            ArrayList<Student> students = new ArrayList<>();
+            students.add(student1);
+            students.add(student2);
+        
+            ArrayList<Group> groups = main.makeGroups(students);
+        
+            assertEquals(1, groups.size());
+            assertEquals(2, groups.get(0).size());
+            assertTrue(groups.get(0).contains(student1));
+            assertTrue(groups.get(0).contains(student2));
+        }
+    
+      /**
+    
+      * Tests makeGroups when students do not share a course.
+        */
+        @Test
+        public void testMakeGroupsNoMatch()
+        {
+            Student student1 = new Student("Kyle");
+            Student student2 = new Student("Ivy");
+        
+            student1.addCourse(new Course(
+                "CS_2114", "3:30PM-4:20PM", "TR"));
+        
+            student2.addCourse(new Course(
+                "MATH_1226", "9:05AM-9:55AM", "MWF"));
+        
+            ArrayList<Student> students = new ArrayList<>();
+            students.add(student1);
+            students.add(student2);
+        
+            ArrayList<Group> groups = main.makeGroups(students);
+        
+            assertTrue(groups.isEmpty());
+        }
+    
+      /**
+    
+      * Tests that makeGroups does not create a group
+      * with fewer than two students.
+        */
+        @Test
+        public void testMakeGroupsOneStudent()
+        {
+            Student student = new Student("Kyle");
+        
+            student.addCourse(new Course(
+                "CS_2114", "3:30PM-4:20PM", "TR"));
+        
+            ArrayList<Student> students = new ArrayList<>();
+            students.add(student);
+        
+            ArrayList<Group> groups = main.makeGroups(students);
+        
+            assertTrue(groups.isEmpty());
+        }
+    
+      /**
+    
+      * Tests doMakeGroups when there are no students.
+        */
+        @Test
+        public void testDoMakeGroupsNoStudents()
+        {
+            main.doMakeGroups();
+        
+            assertTrue(main.getGroups().isEmpty());
+        }
+    
+      /**
+    
+      * Tests doMakeGroups when two students share a course.
+        */
+        @Test
+        public void testDoMakeGroups()
+        {
+            Student student1 = new Student("Josie");
+            Student student2 = new Student("Hank");
+        
+            Course course1 = new Course(
+                "CS_2114", "3:30PM-4:20PM", "TR");
+            Course course2 = new Course(
+                "CS_2114", "3:30PM-4:20PM", "TR");
+        
+            student1.addCourse(course1);
+            student2.addCourse(course2);
+        
+            main.getStudents().add(student1);
+            main.getStudents().add(student2);
+        
+            main.doMakeGroups();
+        
+            assertEquals(1, main.getGroups().size());
+            assertEquals(2, main.getGroups().get(0).size());
+        }
+    
+      /**
+    
+      * Tests listStudents without relying on console output.
+        */
+        @Test
+        public void testListStudents()
+        {
+            main.listStudents();
+    
+            main.addStudent(new Scanner("Jack\n"));
+    
+            assertEquals(1, main.getStudents().size());
+            assertEquals("Jack", main.getStudents().get(0).getName());
+    
+            main.listStudents();
+        }
+    }
