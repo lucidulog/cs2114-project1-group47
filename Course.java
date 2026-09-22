@@ -1,6 +1,3 @@
-import Course_Catalog_Folder.CourseCatalog;
-
-
 /**
 * Represents a single course offering: name, CRN, and meeting time.
 * Objects are immutable once created; invalid input is rejected in the

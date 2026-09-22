@@ -1,21 +1,20 @@
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.Scanner;
 import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension
-//import junit.framework.TestCase;
-
 
 //As a Hokie, I will conduct myself with honor and integrity at all times.
 //I will not lie, cheat, or steal, nor will I accept the actions of those
 //who do.
 //-- Luci Dulog (906619962)
 public class MainTest
-    extends student.TestCase
 {
     //~ Fields ................................................................
     private Main main; 
+
     //~ Constructors ..........................................................
 
     //~Public  Methods ........................................................
@@ -46,7 +45,7 @@ public class MainTest
     public void testPrintWelcome()
     {
         main.printWelcome(); 
-        String output = systemOut().getHistory();
+        String output = getOutput();
         assertTrue(output.contains("Welcome to HokieConnect!"));
     }
     
@@ -57,7 +56,7 @@ public class MainTest
     public void testPrintHelp()
     {
         main.printHelp();
-        String output = systemOut().getHistory();
+        String output = getOutput();
         assertTrue(output.contains("Commands"));
         assertTrue(output.contains("add student"));
         assertTrue(output.contains("make group"));
@@ -70,7 +69,7 @@ public class MainTest
     public void testPrintClassInputInstructions()
     {
         main.printClassInputInstructions(); 
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains("CRN Number")); 
         assertTrue(output.contains("Class & Time"));
     }
@@ -84,11 +83,12 @@ public class MainTest
     {
         Scanner scanner = new Scanner(""); 
         main.processCommand("help", scanner); 
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains("Commands")); 
         
+        notifySystemOut();
         main.processCommand("foobar", scanner); 
-        output = systemOut().getHistory(); 
+        output = getOutput(); 
         assertTrue(output.contains("Unknown command, type 'help'")); 
     }
     
@@ -101,7 +101,7 @@ public class MainTest
     {
         Scanner scanner = new Scanner(""); 
         main.processCommand("add course", scanner); 
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains(
             "Error: You must add a student first before adding courses!")); 
     }
@@ -113,17 +113,18 @@ public class MainTest
     @Test
     public void testAddStudent()
     {
-        Scanner scanner = new Scanner("Isabelle\n"); 
+        Scanner scanner = new Scanner("Kyle\n"); 
         main.addStudent(scanner); 
         
         assertEquals(1, main.getStudents().size()); 
         assertEquals("Kyle", main.getStudents().get(0).getName()); 
         
+        notifySystemOut();
         Scanner blank = new Scanner("\n"); 
         main.addStudent(blank); 
         
-        assertEuqlas(1, main.getStudents().size()); 
-        String output = systemOut().getHistory(); 
+        assertEquals(1, main.getStudents().size()); 
+        String output = getOutput();
         assertTrue(output.contains("Student name cannot be empty"));      
     }
     
@@ -139,16 +140,17 @@ public class MainTest
         
         Scanner courseScanner = new Scanner(
             "CS_2114 TR 3:30PM-4:20PM\ndone\n"); 
-        main.addCourseForCurrentStudent(courseScanner); 
+        main.addCoursesForCurrentStudent(courseScanner); 
         
-        assertEquals(1, main.getStudents().get(0).getCourse().size()); 
+        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
         
+        notifySystemOut();
         Scanner badScanner = new Scanner("CS_2114 TR\ndone\n"); 
         main.addCoursesForCurrentStudent(badScanner); 
         
         assertEquals(1, main.getStudents().get(0).getCourses().size()); 
         
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains("Invalid format!")); 
     }
     
@@ -164,9 +166,9 @@ public class MainTest
         
         Scanner crnScanner = new Scanner("CRN12345\ndone\n"); 
         main.addCoursesForCurrentStudent(crnScanner); 
-        assertEquals(1, main.getStudent().get(0).getCourses().size()); 
+        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
         
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains("Added:")); 
     }
     
@@ -183,9 +185,9 @@ public class MainTest
             "CS_2114 TR 3:30PM-4:20PM\ndone\n");
         main.addCoursesForCurrentStudent(courseScanner); 
         
-        Scanner viewScanner = new Scanner("Josie\n"); 
+        Scanner viewScanner = new Scanner("Nobody\n"); 
         main.viewStudentSchedule(viewScanner); 
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         assertTrue(output.contains("Student 'Nobody' was not found.")); 
     }
     
@@ -197,21 +199,27 @@ public class MainTest
     public void testDoMakeGroups()
     {
         main.doMakeGroups(); 
-        String output = systemOut().getHistory(); 
-        assertTure(output.contains("No students have been added yet.")); 
+        String output = getOutput(); 
+        assertTrue(output.contains("No students have been added yet.")); 
         
+        notifySystemOut();
         Scanner name1 = new Scanner("Josie\n"); 
         main.addStudent(name1); 
         Scanner course1 = new Scanner("CS_2114 TR 3:30PM-4:20PM\ndone\n");
-        main.addCoursesForCurrentStudent(course2); 
+        main.addCoursesForCurrentStudent(course1); 
         
+        Scanner name2 = new Scanner("Hank\n"); 
+        main.addStudent(name2); 
+        Scanner course2 = new Scanner("CS_2114 TR 3:30PM-4:20PM\ndone\n");
+        main.addCoursesForCurrentStudent(course2); 
+
         main.doMakeGroups(); 
         assertEquals(1, main.getGroups().size()); 
     }
     
     /**
-     * tests makeGroups(ArrayLizt<Student>) with a shared course 
-     * and time slot this should cfreate a group and other way 
+     * tests makeGroups(ArrayList<Student>) with a shared course 
+     * and time slot this should create a group and other way 
      * around 
      */
     @Test
@@ -245,18 +253,19 @@ public class MainTest
     public void testListStudents()
     {
         main.listStudents();
-        String output = systemOut().getHistory();
+        String output = getOutput();
         assertTrue(output.contains("No students added yet."));
  
+        notifySystemOut();
         Scanner nameScanner = new Scanner("Jack\n");
         main.addStudent(nameScanner);
         main.listStudents();
-        output = systemOut().getHistory();
+        output = getOutput();
         assertTrue(output.contains("Jack"));
     }
     
     /**
-     * Tests the getStudents() and getGroups() gettter methods
+     * Tests the getStudents() and getGroups() getter methods
      */
     @Test
     public void testGetters()
@@ -273,11 +282,11 @@ public class MainTest
      * Tests startConsole() by simulating typed commands
      */
     @Test
-    pubic void testStartConsole()
+    public void testStartConsole()
     {
-        systemIn("help\nfoobar\nexit\n");
+        setSystemIn("help\nfoobar\nexit\n");
         main.startConsole();
-        String output = systemOut().getHistory();
+        String output = getOutput();
         assertTrue(output.contains("Welcome to HokieConnect!"));
         assertTrue(output.contains("Unknown command, type 'help'"));
         assertTrue(output.contains("Goodbye!"));
@@ -290,9 +299,9 @@ public class MainTest
     @Test
     public void testStartConsoleBlankInput()
     {
-        systemIn("\n\nexit\n");
+        setSystemIn("\n\nexit\n");
         main.startConsole();
-        String output = systemOut().getHistory();
+        String output = getOutput();
         assertTrue(output.contains("Goodbye!"));
     }
     
@@ -303,9 +312,9 @@ public class MainTest
     @Test
     public void testMain()
     {
-        systemIn("exit\n"); 
+        setSystemIn("exit\n"); 
         Main.main(new String[] {}); 
-        String output = systemOut().getHistory(); 
+        String output = getOutput(); 
         
         assertTrue(output.contains("Welcome to HokieConnect!")); 
         assertTrue(output.contains("Goodbye!"));
