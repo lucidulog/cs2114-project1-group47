@@ -22,7 +22,7 @@ To run and test and run our program, use the following commands in the root dire
 
 # Part 1 — Compiling & Running the Actual Program
 
-## 1. Compile the Program
+## Step 1. Compile the Program
 
 Run the following command to compile all of our Classes:
 
@@ -30,7 +30,7 @@ Run the following command to compile all of our Classes:
 javac -d bin Main.java Course.java Student.java Group.java CourseCatalog.java
 ```
 
-## 2. Run our program!
+## Step 2. Run our program!
 
 Run the following command to run our program!
 
@@ -38,7 +38,7 @@ Run the following command to run our program!
 java -cp bin Main
 ```
 
-## 3. Using the Program
+## Step 3. Using the Program
 
 When the program starts, type `help` to display the available commands.
 
@@ -186,13 +186,13 @@ This project uses **JUnit 5** for testing. JUnit 5 has already been imported int
 > retrieve the course information. Therefore, `CourseTest` also tests the
 > `CourseCatalog` functionality needed by `Course`.
 
-## 1. Compile all the Test Classes
+## Step 1. Compile all the Test Classes
 
 ```bash
 javac -d bin -cp "bin:lib/*" StudentTest.java CourseTest.java MainTest.java GroupTest.java
 ```
 
-## 2. Run the JUnit Tests:
+## Step 2. Run the JUnit Tests:
 
 ```bash
 java -jar lib/junit-platform-console-standalone-*.jar execute --class-path bin --scan-class-path
