@@ -1,3 +1,9 @@
+# Welcome to the repository of HokieConnect!
+
+
+## Important Note
+
+
 How to compile everything:
 javac -d bin -cp "lib/*" Course.java CourseTest.java Course_Catalog_Folder/CourseCatalog.java
 
