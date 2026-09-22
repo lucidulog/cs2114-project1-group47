@@ -212,7 +212,12 @@ public class Main
      * 
      * @param scanner The active Scanner object to read user input.
      */
+<<<<<<< Updated upstream
     public void addCoursesForCurrentStudent(Scanner scanner) {
+=======
+    public void addCoursesForCurrentStudent(Scanner scanner) 
+    {
+>>>>>>> Stashed changes
         Student currentStudent = students.get(students.size() - 1);
         System.out.println("--- Adding courses for " + currentStudent.getName() + " ---");
  
