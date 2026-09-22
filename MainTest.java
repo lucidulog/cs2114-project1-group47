@@ -1,10 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension
-//import junit.framework.TestCase;
+import java.util.Scanner;
 
 
 //As a Hokie, I will conduct myself with honor and integrity at all times.
@@ -12,7 +9,6 @@ import org.junit.jupiter.api.Test;
 //who do.
 //-- Luci Dulog (906619962)
 public class MainTest
-    extends student.TestCase
 {
     //~ Fields ................................................................
     private Main main; 
@@ -122,7 +118,7 @@ public class MainTest
         Scanner blank = new Scanner("\n"); 
         main.addStudent(blank); 
         
-        assertEuqlas(1, main.getStudents().size()); 
+        assertEquals(1, main.getStudents().size()); 
         String output = systemOut().getHistory(); 
         assertTrue(output.contains("Student name cannot be empty"));      
     }
@@ -141,7 +137,7 @@ public class MainTest
             "CS_2114 TR 3:30PM-4:20PM\ndone\n"); 
         main.addCourseForCurrentStudent(courseScanner); 
         
-        assertEquals(1, main.getStudents().get(0).getCourse().size()); 
+        assertEquals(1, main.getStudents().get(0).getCourses().size()); 
         
         Scanner badScanner = new Scanner("CS_2114 TR\ndone\n"); 
         main.addCoursesForCurrentStudent(badScanner); 
