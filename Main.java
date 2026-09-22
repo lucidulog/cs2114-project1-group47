@@ -507,13 +507,16 @@ public class Main
 
             char day = 0;
             int start = 0;
+            int end = 0;
+            int slots = 0;
             boolean found = false;
 
             for (int attempt = 0; attempt < MAX_ATTEMPTS && !found; attempt++)
             {
                 day = DAYS[(int) (Math.random() * DAYS.length)];
-                start = WINDOW_START + (int) (Math.random() * (WINDOW_END - WINDOW_START - MEETING_LENGTH));
-                int end = start + MEETING_LENGTH;
+                slots = (WINDOW_END - WINDOW_START - MEETING_LENGTH) / 30 + 1;
+                start = WINDOW_START + (int) (Math.random() * slots) * 30;
+                end = start + MEETING_LENGTH;
 
                 boolean collision = false;
                 for (Student s : g.getMembers())
