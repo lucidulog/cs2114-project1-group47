@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 //who do.
 //-- Luci Dulog (906619962)
 public class MainTest
-    extends student.TestCase
 {
     //~ Fields ................................................................
     private Main main; 
@@ -124,7 +124,7 @@ public class MainTest
         main.addStudent(blank); 
         
         assertEquals(1, main.getStudents().size()); 
-        String output = getOutput(); 
+        String output = getOutput();
         assertTrue(output.contains("Student name cannot be empty"));      
     }
     
